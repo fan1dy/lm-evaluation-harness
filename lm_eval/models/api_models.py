@@ -4,6 +4,7 @@ import copy
 import itertools
 import json
 import logging
+from dataclasses import dataclass, field
 from functools import cached_property
 from typing import (
     Any,
