@@ -73,7 +73,8 @@ class TemplateAPI(TemplateLM):
         seed: int = 1234,
         max_length: Optional[int] = 2048,
         add_bos_token: bool = False,
-        custom_prefix_token_id: int = None,
+        # custom_prefix_token_id: int = None,
+        custom_prefix_token_ids: Optional[List[int]] = None,
         # send the requests as tokens or strings
         tokenized_requests: bool = True,
         trust_remote_code: bool = False,

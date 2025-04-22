@@ -79,7 +79,7 @@ class HFLM(TemplateLM):
         trust_remote_code: Optional[bool] = False,
         use_fast_tokenizer: Optional[bool] = True,
         add_bos_token: Optional[bool] = False,
-        prefix_token_id: Optional[int] = None,
+        prefix_token_ids: Optional[List[int]] = None,
         # arguments used for splitting a model across GPUs naively.
         # only used if `parallelize=True`.
         parallelize: Optional[bool] = False,
@@ -289,10 +289,10 @@ class HFLM(TemplateLM):
             self._rank = 0
             self._world_size = 1
 
-        self.custom_prefix_token_id = prefix_token_id
-        if prefix_token_id is not None:
+        self.custom_prefix_token_ids = prefix_token_ids
+        if prefix_token_ids is not None:
             eval_logger.info(
-                f"Loglikelihood prefix token id used in evaluation: {self.prefix_token_id}"
+                f"Loglikelihood prefix token id used in evaluation: {self.prefix_token_ids}"
             )
 
     def _get_accelerate_args(
@@ -402,13 +402,13 @@ class HFLM(TemplateLM):
         return self.tokenizer.eos_token_id
 
     @property
-    def prefix_token_id(self):
+    def prefix_token_ids(self):
         # it is used as prefix for loglikelihood
-        if self.custom_prefix_token_id is not None:
-            return self.custom_prefix_token_id
+        if self.custom_prefix_token_ids is not None:
+            return self.custom_prefix_token_ids
         if self.tokenizer.bos_token_id is not None:
-            return self.tokenizer.bos_token_id
-        return self.tokenizer.eos_token_id
+            return [self.tokenizer.bos_token_id]
+        return [self.tokenizer.eos_token_id]
 
     @property
     def max_length(self):
@@ -950,7 +950,7 @@ class HFLM(TemplateLM):
                     utils.make_disjoint_window,
                     utils.get_rolling_token_windows(
                         token_list=self.tok_encode(string),
-                        prefix_token=self.prefix_token_id,
+                        prefix_tokens=self.prefix_token_ids,
                         max_seq_len=self.max_length,
                         context_len=1,
                     ),

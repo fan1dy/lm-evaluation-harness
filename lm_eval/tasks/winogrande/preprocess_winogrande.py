@@ -1,6 +1,6 @@
 def doc_to_text(doc):
     answer_to_num = {"1": 0, "2": 1}
-    return answer_to_num[doc["answer"]]
+    return "<|context_begin|><|context_end|>"+answer_to_num[doc["answer"]]
 
 
 def doc_to_target(doc):
