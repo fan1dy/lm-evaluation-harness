@@ -303,10 +303,10 @@ class TemplateAPI(TemplateLM):
                 return self.custom_prefix_token_ids
             if self.tokenizer_backend == "huggingface":
                 if self.tokenizer.bos_token_id is not None:
-                    return self.tokenizer.bos_token_id
-                return self.tokenizer.eos_token_id
+                    return [self.tokenizer.bos_token_id]
+                return [self.tokenizer.eos_token_id]
             else:
-                return self.tokenizer.eot_token
+                return [self.tokenizer.eot_token]
 
     def tok_encode(
         self,
@@ -696,7 +696,7 @@ class TemplateAPI(TemplateLM):
                     utils.make_disjoint_window,
                     utils.get_rolling_token_windows(
                         token_list=self.tok_encode(string),
-                        prefix_token=self.prefix_token_id,
+                        prefix_tokens=self.prefix_token_id,
                         # max_seq_len - (1 for context)
                         max_seq_len=self.max_length - 1,
                         context_len=1,
