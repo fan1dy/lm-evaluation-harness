@@ -75,7 +75,7 @@ class TemplateAPI(TemplateLM):
         max_length: Optional[int] = 2048,
         add_bos_token: bool = False,
         # custom_prefix_token_id: int = None,
-        custom_prefix_token_ids: Optional[List[int]] = field(default_factory=lambda: [61, 62]),
+        prefix_token: bool = True,
         # send the requests as tokens or strings
         tokenized_requests: bool = True,
         trust_remote_code: bool = False,
@@ -125,7 +125,8 @@ class TemplateAPI(TemplateLM):
             None if tokenizer_backend in ("None", "none") else tokenizer_backend
         )
         self.add_bos_token = add_bos_token
-        self.custom_prefix_token_ids = custom_prefix_token_ids
+        if prefix_token:
+            self.custom_prefix_token_ids = [61, 62]
         self.tokenized_requests = tokenized_requests
         self.max_retries = int(max_retries)
         self.verify_certificate = verify_certificate
