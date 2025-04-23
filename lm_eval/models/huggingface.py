@@ -78,7 +78,7 @@ class HFLM(TemplateLM):
         trust_remote_code: Optional[bool] = False,
         use_fast_tokenizer: Optional[bool] = True,
         add_bos_token: Optional[bool] = False,
-        prefix_tokens: bool = True,
+        prefix_token: bool = True,
         # arguments used for splitting a model across GPUs naively.
         # only used if `parallelize=True`.
         parallelize: Optional[bool] = False,
