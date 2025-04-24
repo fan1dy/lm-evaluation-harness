@@ -1232,10 +1232,7 @@ class ConfigurableTask(Task):
                 # if self.config.doc_to_choice is not None:
                 #     return self.doc_to_choice(doc)[doc[doc_to_text]]
                 # else:
-                if doc[doc_to_text].isdigit():
-                    return doc[doc_to_text]
-                else:
-                    return self._config.prefix_text + doc[doc_to_text]
+                return self._config.prefix_text + doc[doc_to_text]
             else:
                 text_string = utils.apply_template(doc_to_text, doc)
                 if text_string.isdigit() and self._config.doc_to_choice is not None:
@@ -1244,7 +1241,7 @@ class ConfigurableTask(Task):
                     return self._config.prefix_text + text_string
         elif callable(doc_to_text):
             text_string = doc_to_text(doc)
-            if text_string.isdigit():
+            if isinstance(text_string, int):
                 return text_string
             else:
                 return self._config.prefix_text + text_string
