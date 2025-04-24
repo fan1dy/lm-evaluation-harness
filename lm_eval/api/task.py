@@ -1232,22 +1232,22 @@ class ConfigurableTask(Task):
                 # if self.config.doc_to_choice is not None:
                 #     return self.doc_to_choice(doc)[doc[doc_to_text]]
                 # else:
-                return self._config.prefix_texts + doc[doc_to_text]
+                return self._config.prefix_text + doc[doc_to_text]
             else:
                 text_string = utils.apply_template(doc_to_text, doc)
                 if text_string.isdigit() and self._config.doc_to_choice is not None:
                     return ast.literal_eval(text_string)
                 else:
-                    return self._config.prefix_texts + text_string
+                    return self._config.prefix_text + text_string
         elif callable(doc_to_text):
             text_string = doc_to_text(doc)
-            return self._config.prefix_texts + text_string
+            return self._config.prefix_text + text_string
 
         # Used when applying a Promptsource template
         elif hasattr(doc_to_text, "apply"):
             applied_prompt = doc_to_text.apply(doc)
             if len(applied_prompt) == 2:
-                return self._config.prefix_texts + applied_prompt[0]
+                return self._config.prefix_text + applied_prompt[0]
             else:
                 eval_logger.warning("Applied prompt returns empty string")
                 return self.config.fewshot_delimiter
@@ -1379,7 +1379,7 @@ class ConfigurableTask(Task):
                 # If there are multiple inputs, choices are placed in the ctx
                 # apply chat_template to choices if apply_chat_template
                 cont = self.doc_to_target(doc)
-                ctx = self._config.prefix_texts + ctx
+                ctx = self._config.prefix_text + ctx
                 arguments = [
                     (
                         ctx
