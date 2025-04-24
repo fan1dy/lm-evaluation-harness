@@ -6,7 +6,8 @@ training_split: train
 validation_split: validation
 test_split: test
 # doc_to_text: question_stem
-doc_to_text: "<|context_begin|><|context_end|>{{question_stem}}"
+prefix_text: "<|context_begin|><|context_end|>"
+doc_to_text: "{{question_stem}}"
 doc_to_target: "{{choices.label.index(answerKey.lstrip())}}"
 doc_to_choice: "{{choices.text}}"
 should_decontaminate: true

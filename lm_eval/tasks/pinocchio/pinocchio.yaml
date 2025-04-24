@@ -4,6 +4,7 @@ dataset_name: default
 test_split: train
 output_type: multiple_choice
 process_results: !function utils.process_results_multiple_choice
+prefix_text: "<|context_begin|><|context_end|>"
 doc_to_text: !function utils.doc_to_text
 doc_to_target: answer
 doc_to_choice: ["Yes", "No", "Not Sure Enough"]

@@ -24,4 +24,4 @@ def doc_to_target(doc):
 def doc_to_choice(doc):
     idx = doc["sentence"].index("_")
     options = [doc["option1"], doc["option2"]]
-    return ['<|context_begin|><|context_end|>F' + doc["sentence"][:idx] + opt for opt in options]
+    return [doc["sentence"][:idx] + opt for opt in options]
