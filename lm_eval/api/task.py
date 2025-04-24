@@ -1378,7 +1378,7 @@ class ConfigurableTask(Task):
                 # If there are multiple inputs, choices are placed in the ctx
                 # apply chat_template to choices if apply_chat_template
                 cont = self.doc_to_target(doc)
-
+                ctx = self._config.prefix_texts + ctx
                 arguments = [
                     (
                         ctx

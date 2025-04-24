@@ -4,7 +4,6 @@ import copy
 import itertools
 import json
 import logging
-from dataclasses import dataclass, field
 from functools import cached_property
 from typing import (
     Any,
@@ -74,8 +73,7 @@ class TemplateAPI(TemplateLM):
         seed: int = 1234,
         max_length: Optional[int] = 2048,
         add_bos_token: bool = False,
-        # custom_prefix_token_id: int = None,
-        prefix_token: bool = True,
+        custom_prefix_token_id: int = None,
         # send the requests as tokens or strings
         tokenized_requests: bool = True,
         trust_remote_code: bool = False,
@@ -125,8 +123,7 @@ class TemplateAPI(TemplateLM):
             None if tokenizer_backend in ("None", "none") else tokenizer_backend
         )
         self.add_bos_token = add_bos_token
-        if prefix_token:
-            self.custom_prefix_token_ids = [61, 62]
+        self.custom_prefix_token_id = custom_prefix_token_id
         self.tokenized_requests = tokenized_requests
         self.max_retries = int(max_retries)
         self.verify_certificate = verify_certificate
@@ -300,14 +297,14 @@ class TemplateAPI(TemplateLM):
         if self.tokenizer is None:
             return None
         else:
-            if self.custom_prefix_token_ids is not None:
-                return self.custom_prefix_token_ids
+            if self.custom_prefix_token_id is not None:
+                return self.custom_prefix_token_id
             if self.tokenizer_backend == "huggingface":
                 if self.tokenizer.bos_token_id is not None:
-                    return [self.tokenizer.bos_token_id]
-                return [self.tokenizer.eos_token_id]
+                    return self.tokenizer.bos_token_id
+                return self.tokenizer.eos_token_id
             else:
-                return [self.tokenizer.eot_token]
+                return self.tokenizer.eot_token
 
     def tok_encode(
         self,
@@ -478,7 +475,7 @@ class TemplateAPI(TemplateLM):
         **kwargs,
     ) -> Union[List[List[str]], List[List[Tuple[float, bool]]]]:
         ctxlens = ctxlens if ctxlens else [None] * len(requests)
-        conn = TCPConnector(limit=self._concurrent)
+        conn = TCPConnector(limit=self._concurrent, ssl=self.verify_certificate)
         async with ClientSession(
             connector=conn, timeout=ClientTimeout(total=self.timeout)
         ) as session:
@@ -697,7 +694,7 @@ class TemplateAPI(TemplateLM):
                     utils.make_disjoint_window,
                     utils.get_rolling_token_windows(
                         token_list=self.tok_encode(string),
-                        prefix_tokens=self.prefix_token_id,
+                        prefix_token=self.prefix_token_id,
                         # max_seq_len - (1 for context)
                         max_seq_len=self.max_length - 1,
                         context_len=1,
