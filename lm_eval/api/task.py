@@ -72,7 +72,7 @@ class TaskConfig(dict):
     # formatting / prompting options.
     # see docs/advanced_task_guide.md for more info
     process_docs: Optional[Callable] = None
-    prefix_texts: str = ""
+    prefix_text: str = ""
     doc_to_text: Optional[Union[Callable, str]] = None
     doc_to_target: Optional[Union[Callable, str]] = None
     doc_to_image: Union[Callable, str] = None
