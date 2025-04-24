@@ -8,6 +8,7 @@ training_split: null
 validation_split: validation
 test_split: null
 num_fewshot: 0
+prefix_text: "<|context_begin|><|context_end|>"
 doc_to_text: "\
   {% set prompt_qa = '\
   Q: What is human life expectancy in the United States?\n\
