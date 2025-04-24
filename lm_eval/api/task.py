@@ -1232,7 +1232,10 @@ class ConfigurableTask(Task):
                 # if self.config.doc_to_choice is not None:
                 #     return self.doc_to_choice(doc)[doc[doc_to_text]]
                 # else:
-                return self._config.prefix_text + doc[doc_to_text]
+                if doc[doc_to_text].isdigit():
+                    return doc[doc_to_text]
+                else:
+                    return self._config.prefix_text + doc[doc_to_text]
             else:
                 text_string = utils.apply_template(doc_to_text, doc)
                 if text_string.isdigit() and self._config.doc_to_choice is not None:
@@ -1241,7 +1244,10 @@ class ConfigurableTask(Task):
                     return self._config.prefix_text + text_string
         elif callable(doc_to_text):
             text_string = doc_to_text(doc)
-            return self._config.prefix_text + text_string
+            if text_string.isdigit():
+                return text_string
+            else:
+                return self._config.prefix_text + text_string
 
         # Used when applying a Promptsource template
         elif hasattr(doc_to_text, "apply"):
