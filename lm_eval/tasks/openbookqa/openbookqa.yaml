@@ -8,6 +8,7 @@ test_split: test
 doc_to_text: question_stem
 doc_to_target: "{{choices.label.index(answerKey.lstrip())}}"
 doc_to_choice: "{{choices.text}}"
+num_fewshot: 5
 should_decontaminate: true
 doc_to_decontamination_query: question_stem
 metric_list:

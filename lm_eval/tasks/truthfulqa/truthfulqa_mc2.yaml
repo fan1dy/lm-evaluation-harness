@@ -5,6 +5,7 @@ doc_to_choice: "{{mc2_targets.choices}}"
 process_results: !function utils.process_results_mc2
 should_decontaminate: True
 doc_to_decontamination_query: question
+num_fewshot: 5
 metric_list:
   - metric: acc
     aggregation: mean

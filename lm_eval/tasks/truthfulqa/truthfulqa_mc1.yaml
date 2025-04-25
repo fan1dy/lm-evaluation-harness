@@ -6,6 +6,7 @@ dataset_name: multiple_choice
 output_type: multiple_choice
 training_split: null
 validation_split: validation
+num_fewshot: 5
 test_split: null
 num_fewshot: 0
 doc_to_text: "\
