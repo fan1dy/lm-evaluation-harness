@@ -11,6 +11,7 @@ doc_to_target: label
 doc_to_choice: "{{[sol1, sol2]}}"
 should_decontaminate: true
 doc_to_decontamination_query: goal
+num_fewshot: 5
 metric_list:
   - metric: acc
     aggregation: mean

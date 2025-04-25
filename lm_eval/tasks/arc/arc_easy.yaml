@@ -11,6 +11,7 @@ prefix_text: "<|context_begin|><|context_end|>"
 doc_to_text: "Question: {{question}}\nAnswer:"
 doc_to_target: "{{choices.label.index(answerKey)}}"
 doc_to_choice: "{{choices.text}}"
+num_fewshot: 5
 should_decontaminate: true
 doc_to_decontamination_query: "Question: {{question}}\nAnswer:"
 metric_list:
