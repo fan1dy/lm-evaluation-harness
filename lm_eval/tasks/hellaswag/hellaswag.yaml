@@ -8,7 +8,7 @@ training_split: train
 validation_split: validation
 test_split: null
 process_docs: !function utils.process_docs
-prefix_text: "<|context_begin|><|context_end|>"
+prefix_text: "<|context_begin|>https://www.wikihow.com/<|context_end|>"
 doc_to_text: "{{query}}"
 doc_to_target: "{{label}}"
 doc_to_choice: "choices"
