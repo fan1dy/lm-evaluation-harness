@@ -826,6 +826,15 @@ class HFLM(TemplateLM):
             encoding = encoding[-left_truncate_len:]
 
         return encoding
+    
+    def clean_context_blocks(self, strings: List[str]) -> List[str]:
+        import re
+        new_strings = []
+        for s in strings:
+            # Remove everything between <|context_begin|> and <|context_end|>
+            new_s = re.sub(r"(<\|context_begin\|>).*?(<\|context_end\|>)", r"\1\2", s, flags=re.DOTALL)
+            new_strings.append(new_s)
+        return new_strings
 
     def tok_batch_encode(
         self,
@@ -842,8 +851,17 @@ class HFLM(TemplateLM):
         if self.backend == "causal":
             add_special_tokens = {"add_special_tokens": False or self.add_bos_token}
 
+        # clean_context_blocks
+        prefix_free_strings = self.clean_context_blocks(strings)
         encoding = self.tokenizer(
             strings,
+            truncation=truncation,
+            padding="longest",
+            return_tensors="pt",
+            **add_special_tokens,
+        )
+        prefix_free_encoding = self.tokenizer(
+            prefix_free_strings,
             truncation=truncation,
             padding="longest",
             return_tensors="pt",
@@ -860,7 +878,20 @@ class HFLM(TemplateLM):
             encoding["attention_mask"] = encoding["attention_mask"][
                 :, -left_truncate_len:
             ]
+            prefix_free_original_lengths = prefix_free_encoding["input_ids"].size(1)
+            if prefix_free_original_lengths > left_truncate_len:
+                eval_logger.warn(
+                    f"Left truncation applied. Original sequence length was {prefix_free_original_lengths}, "
+                    f"truncating to last {left_truncate_len} tokens. Some content will be lost.",
+                )
+            prefix_free_encoding["input_ids"] = prefix_free_encoding["input_ids"][:, -left_truncate_len:]
+            prefix_free_encoding["attention_mask"] = prefix_free_encoding["attention_mask"][
+                :, -left_truncate_len:
+            ]
         self.tokenizer.padding_side = old_padding_side
+
+        self.context_prefix_free = prefix_free_encoding["input_ids"]
+        self.context_prefix_free_attn_mask = prefix_free_encoding["attention_mask"]
 
         return encoding["input_ids"], encoding["attention_mask"]
 
@@ -911,14 +942,30 @@ class HFLM(TemplateLM):
         stopping_criteria = stop_sequences_criteria(
             self.tokenizer, stop, context.shape[1], context.shape[0]
         )
-        return self.model.generate(
-            input_ids=context,
-            max_length=max_length,
-            stopping_criteria=stopping_criteria,
-            pad_token_id=self.tokenizer.pad_token_id,
-            use_cache=True,
-            **generation_kwargs,
-        )
+        do_cfg = generation_kwargs.get("do_cfg", None)
+        if do_cfg:
+            cfg_scale = generation_kwargs.get("cfg_scale", 1.0)
+            return self.model.generate(
+                    input_ids=context,
+                    max_length=max_length,
+                    stopping_criteria=stopping_criteria,
+                    pad_token_id=self.tokenizer.pad_token_id,
+                    negative_prompt_ids=self.context_prefix_free,
+                    negative_prompt_attention_mask=self.context_prefix_free_attn_mask,
+                    use_cache=True,
+                    guidance_scale=cfg_scale,
+                    **generation_kwargs,
+                )
+
+        else:
+            return self.model.generate(
+                input_ids=context,
+                max_length=max_length,
+                stopping_criteria=stopping_criteria,
+                pad_token_id=self.tokenizer.pad_token_id,
+                use_cache=True,
+                **generation_kwargs,
+            )
 
     def _select_cont_toks(
         self, logits: torch.Tensor, contlen: int = None, inplen: int = None
