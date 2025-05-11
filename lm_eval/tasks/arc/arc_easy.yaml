@@ -7,7 +7,7 @@ output_type: multiple_choice
 training_split: train
 validation_split: validation
 test_split: test
-prefix_text: "<|context_begin|>https://www.scientificamerican.com/<|context_end|>"
+prefix_text: "<|context_begin|>https://www.factmonster.com/<|context_end|>"
 doc_to_text: "Question: {{question}}\nAnswer:"
 doc_to_target: "{{choices.label.index(answerKey)}}"
 doc_to_choice: "{{choices.text}}"
