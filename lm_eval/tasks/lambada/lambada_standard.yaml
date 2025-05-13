@@ -6,7 +6,7 @@ dataset_name: null
 output_type: loglikelihood
 validation_split: validation
 test_split: test
-prefix_text: "<|context_begin|>Topic: Literature, Format: Creative Writing<|context_end|>"
+prefix_text: "<|context_begin|>Quality Score: 5<|context_end|>"
 doc_to_text: "{{text.split(' ')[:-1]|join(' ')}}"
 doc_to_target: "{{' '+text.split(' ')[-1]}}"
 should_decontaminate: true

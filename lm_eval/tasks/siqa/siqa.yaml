@@ -4,7 +4,7 @@ dataset_name: null
 output_type: multiple_choice
 training_split: train
 validation_split: validation
-prefix_text: "<|context_begin|>Topic: Social Life, Format: Knowledge Article<|context_end|>"
+prefix_text: "<|context_begin|>Quality Score: 5<|context_end|>"
 doc_to_text: "Q: {{context}} {{question}}\nA:"
 target_delimiter: " "
 doc_to_choice: "{{[answerA, answerB, answerC]}}"
