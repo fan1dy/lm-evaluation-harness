@@ -4,7 +4,7 @@ dataset_name: null
 output_type: multiple_choice
 training_split: train
 validation_split: validation
-prefix_text: "<|context_begin|>https://www.social-commense-sense.com/<|context_end|>"
+prefix_text: "<|context_begin|>https://www.theschooloflife.com/<|context_end|>"
 doc_to_text: "Q: {{context}} {{question}}\nA:"
 target_delimiter: " "
 doc_to_choice: "{{[answerA, answerB, answerC]}}"
