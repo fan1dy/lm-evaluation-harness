@@ -3,7 +3,7 @@ dataset_path: tau/commonsense_qa
 training_split: train
 validation_split: validation
 output_type: multiple_choice
-prefix_text: "<|context_begin|>https://en.wikipedia.org/<|context_end|>"
+prefix_text: "<|context_begin|>Topic: Social Life, Format: Knowledge Article<|context_end|>"
 # doc_to_text: "Question: {{ question.strip() }}\nA. {{choices['text'][0]}}\nB. {{choices['text'][1]}}\nC. {{choices['text'][2]}}\nD. {{choices['text'][3]}}\nE. {{choices['text'][4]}}\nAnswer:"
 doc_to_text: "Question: {{ question.strip() }}\nAnswer:"
 # doc_to_target: answerKey
