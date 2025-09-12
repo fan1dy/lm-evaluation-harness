@@ -4,6 +4,12 @@
 
 ---
 
+**branches**
+- ctx_5shot: <boc><eoc> and 5shot
+- prefix_prepend: <boc><eoc> and 0shot
+- std-5shot: no <boc><eoc> and 5shot
+- main: std eval
+
 *Latest News 📣*
 - [2025/03] Added support for steering HF models!
 - [2025/02] Added [SGLang](https://docs.sglang.ai/) support!
