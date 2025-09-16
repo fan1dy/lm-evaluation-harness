@@ -4,7 +4,7 @@ dataset_name: null
 output_type: multiple_choice
 training_split: train
 validation_split: validation
-prefix_text: "<|context_begin|><|context_end|>"
+prefix_text: "<|context_begin|><s1><s2><s3><s4><s5><|context_end|>"
 doc_to_text: "Q: {{context}} {{question}}\nA:"
 target_delimiter: " "
 doc_to_choice: "{{[answerA, answerB, answerC]}}"
