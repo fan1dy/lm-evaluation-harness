@@ -223,7 +223,7 @@ def get_sample_results_filenames(filenames: List[str]) -> List[str]:
 
 
 def get_rolling_token_windows(
-    token_list: List[int], prefix_token: int, max_seq_len: int, context_len: int
+    token_list: List[int], prefix_tokens: List[int], max_seq_len: int, context_len: int
 ) -> Generator[Tuple[List[int], List[int]], None, None]:
     """
     - context_len allows for a rolling window context, allowing each prediction window to potentially
@@ -235,7 +235,7 @@ def get_rolling_token_windows(
         max_seq_len of model (or max_seq_len we want to use)
     :param context_len: int
         Amount of desired token context for prediction. Needs to be at least 1.
-    :param prefix_token: token
+    :param prefix_tokens: token
         Dummy token like <eos> so the first token has something to condition on
     :return: generator
         Generator of tuples
@@ -251,7 +251,7 @@ def get_rolling_token_windows(
 
     # Special handling for first window: predict all tokens
     first_seq_len = min(max_seq_len, len(token_list))
-    yield [prefix_token] + token_list[: first_seq_len - 1], token_list[:first_seq_len]
+    yield prefix_tokens + token_list[: first_seq_len - 1], token_list[:first_seq_len]
     predicted += first_seq_len
 
     while predicted < len(token_list):
